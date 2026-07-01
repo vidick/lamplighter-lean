@@ -1,0 +1,94 @@
+# Provenance metadata for the formalization of polynomial Hilbert-Schmidt
+# stability of the lamplighter group.
+
+result:
+  name: lamplighter_HS_stability
+  statement: >
+    There exist universal constants C, c > 0 such that for every
+    0 < kappa <= 1/2, with
+    M = ceil(C * kappa^(-20) * log(2 / kappa)) and
+    epsilon = c * kappa^7 / M^2, every pair of d-dimensional unitaries
+    A, T satisfying ||A^2 - 1||_HS <= epsilon and
+    ||[A, T^(-i) A T^i]||_HS <= epsilon for all 0 <= i <= 2M
+    can be perturbed by at most kappa in normalized Hilbert-Schmidt norm
+    to unitaries A', T' such that A'^2 = 1 and A' commutes with
+    T'^(-i) A' T'^i for every integer i.
+  axioms: [propext, Classical.choice, Quot.sound]
+  sorries: 0
+  lean_toolchain: leanprover/lean4:v4.28.0
+  note: >
+    The exported declaration is
+    LamplighterStability.lamplighter_HS_stability in RequestProject.Main.
+    Its statement is mirrored by comparator.lean, which imports only Mathlib
+    and states the headline result for independent comparator-style checking.
+
+artifacts:
+  repository: local workspace c:/Users/thoma/Cursor/Lamplighter
+  verification: |
+    lake --try-cache build
+    lake env lean comparator.lean
+    # then:
+    # import RequestProject
+    # #print axioms LamplighterStability.lamplighter_HS_stability
+    # expected:
+    # [propext, Classical.choice, Quot.sound]
+  comparator: comparator.lean
+  statement_comparison: statement_colossus_comparison.md
+
+dates:
+  formalized: 2026-07-01
+  verified: 2026-07-01
+  wall_clock: not recorded
+
+sources:
+  - kind: paper
+    author: Alon Dogon and Thomas Vidick
+    title: Polynomial Hilbert-Schmidt stability of the lamplighter group
+    note: >
+      The Lean theorem formalizes the paper's Theorem 1.1, with normalized
+      Hilbert-Schmidt norm, polynomial window
+      M = ceil(C * kappa^(-20) * log(2 / kappa)), and tolerance
+      epsilon = c * kappa^7 / M^2.
+  - kind: statement_comparison
+    title: Statement comparison for the main theorem
+    path: statement_colossus_comparison.md
+    note: >
+      Gives a line-by-line comparison between the informal theorem statement
+      and the Lean declaration LamplighterStability.lamplighter_HS_stability.
+  - kind: dependency
+    title: Mathlib
+    url: https://github.com/leanprover-community/mathlib4
+    revision: v4.28.0
+    note: >
+      Used via the local checkout configured in lakefile.toml at
+      ../../Lean/mathlib4.
+
+orchestration:
+  director:
+    tool: Cursor
+    model: GPT-5.5
+    role: >
+      Local build setup, dependency reuse, comparator file creation, and
+      metadata generation for this workspace.
+    usage_this_session:
+      api_calls: not recorded
+      output_tokens: not recorded
+      fresh_input_tokens: not recorded
+      cache_read_tokens: not recorded
+      cache_write_tokens: not recorded
+  provers:
+    - tool: Lean
+      version: 4.28.0
+      tasks:
+        - lake --try-cache build
+        - lake env lean comparator.lean
+        - "#print axioms LamplighterStability.lamplighter_HS_stability"
+      result: >
+        The project build completed successfully, comparator.lean typechecked
+        against Mathlib with only the expected sorry warning, and the main theorem
+        axiom audit reported exactly [propext, Classical.choice, Quot.sound].
+
+attribution_note: >
+  This metadata records the state of the local workspace at verification time.
+  The formal proof is assembled in RequestProject.MainAssembly and exported
+  through RequestProject.Main as LamplighterStability.lamplighter_HS_stability.
