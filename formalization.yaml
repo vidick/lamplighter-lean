@@ -23,7 +23,7 @@ result:
     and states the headline result for independent comparator-style checking.
 
 artifacts:
-  repository: local workspace c:/Users/thoma/Cursor/Lamplighter
+  repository: https://github.com/vidick/lamplighter-lean
   verification: |
     lake --try-cache build
     lake env lean comparator.lean
@@ -32,7 +32,10 @@ artifacts:
     # #print axioms LamplighterStability.lamplighter_HS_stability
     # expected:
     # [propext, Classical.choice, Quot.sound]
-  comparator: comparator.lean
+  comparator: https://github.com/vidick/lamplighter-comparator
+  comparator_verification: |
+    # in https://github.com/vidick/lamplighter-comparator
+    ./verify.sh
   statement_comparison: statement_colossus_comparison.md
 
 dates:
