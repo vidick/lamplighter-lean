@@ -19,8 +19,6 @@ result:
   note: >
     The exported declaration is
     LamplighterStability.lamplighter_HS_stability in RequestProject.Main.
-    Its statement is mirrored by comparator.lean, which imports only Mathlib
-    and states the headline result for independent comparator-style checking.
 
 artifacts:
   repository: https://github.com/vidick/lamplighter-lean
@@ -80,16 +78,8 @@ orchestration:
       cache_read_tokens: not recorded
       cache_write_tokens: not recorded
   provers:
-    - tool: Lean
-      version: 4.28.0
-      tasks:
-        - lake --try-cache build
-        - lake env lean comparator.lean
-        - "#print axioms LamplighterStability.lamplighter_HS_stability"
-      result: >
-        The project build completed successfully, comparator.lean typechecked
-        against Mathlib with only the expected sorry warning, and the main theorem
-        axiom audit reported exactly [propext, Classical.choice, Quot.sound].
+    - tool: Aristotle (Harmonic), CLI v2, target Lean v4.28.0
+    
 
 attribution_note: >
   This metadata records the state of the local workspace at verification time.
