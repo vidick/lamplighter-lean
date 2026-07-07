@@ -42,46 +42,29 @@ dates:
   wall_clock: not recorded
 
 sources:
-  - kind: paper
-    author: Alon Dogon and Thomas Vidick
-    title: Polynomial Hilbert-Schmidt stability of the lamplighter group
+  - kind: "paper"
+    author: "Alon Dogon and Thomas Vidick"
+    title: "Polynomial Hilbert-Schmidt stability of the lamplighter group"
+    id: "arXiv:XXXX" 
     note: >
-      The Lean theorem formalizes the paper's Theorem 1.1, with normalized
-      Hilbert-Schmidt norm, polynomial window
-      M = ceil(C * kappa^(-20) * log(2 / kappa)), and tolerance
-      epsilon = c * kappa^7 / M^2.
-  - kind: statement_comparison
-    title: Statement comparison for the main theorem
-    path: statement_colossus_comparison.md
-    note: >
-      Gives a line-by-line comparison between the informal theorem statement
-      and the Lean declaration LamplighterStability.lamplighter_HS_stability.
-  - kind: dependency
-    title: Mathlib
-    url: https://github.com/leanprover-community/mathlib4
-    revision: v4.28.0
-    note: >
-      Used via the local checkout configured in lakefile.toml at
-      ../../Lean/mathlib4.
+      The Lean theorem formalizes the paper's Theorem 1.1
+ 
+automation:
+  methods:
+    - method: "agent"  
+      models: ["GPT-5.5"]
+      framework: "Cursor" 
+    - method: "autonomous"  
+      framework: "Aristotle (Harmonic)" 
+      tool_setup: "Repeated prompting over ~2 weeks"
+      cost:
+        wall_time: "~2 weeks"          # e.g. "3 weeks" or "240 GPU-hours"
+      prompting_notes: "64 interactions, mostly continue"
 
-orchestration:
-  director:
-    tool: Cursor
-    model: GPT-5.5
-    role: >
-      Local build setup, dependency reuse, comparator file creation, and
-      metadata generation for this workspace.
-    usage_this_session:
-      api_calls: not recorded
-      output_tokens: not recorded
-      fresh_input_tokens: not recorded
-      cache_read_tokens: not recorded
-      cache_write_tokens: not recorded
-  provers:
-    - tool: Aristotle (Harmonic), CLI v2, target Lean v4.28.0
-    
-
-attribution_note: >
-  This metadata records the state of the local workspace at verification time.
-  The formal proof is assembled in RequestProject.MainAssembly and exported
-  through RequestProject.Main as LamplighterStability.lamplighter_HS_stability.
+alignment:
+  namespace: "LamplighterStability"
+  statements:
+    - source: "Theorem 1.1" 
+      lean: "lamplighter_HS_stability"
+      module: "RequesProject/main.lean"
+      status: "proved" 
