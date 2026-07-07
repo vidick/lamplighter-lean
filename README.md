@@ -16,7 +16,7 @@ approximate order-two and orbit-commutator hypotheses can be perturbed, in
 normalized Hilbert-Schmidt norm, to genuine unitaries `A'`, `T'` with
 `A'^2 = 1` and a commuting orbit.
 
-The file `statement_colossus_comparison.md` contains a complete statement of the theorem in latex and a point-by-point comparison with the statement in Lean. 
+The file `statement_comparison.md` contains a complete statement of the theorem in latex and a point-by-point comparison with the statement in Lean. 
 
 ## Build
 
