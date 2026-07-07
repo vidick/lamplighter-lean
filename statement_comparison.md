@@ -1,9 +1,9 @@
 # Statement comparison — main theorem (`export2`)
 
-This file compares the **informal** statement of the main result (Theorem 1.1 of
+This file compares the statement of the main result (Theorem 1.1 of
 *"Polynomial Hilbert–Schmidt stability of the lamplighter group"* by Alon Dogon
 and Thomas Vidick) with the **formal** Lean statement that is proved in this
-export, so that a reader can check by hand that the formalization is faithful.
+repository, so that a reader can check by hand that the formalization is faithful.
 
 - Formal declaration: `LamplighterStability.lamplighter_HS_stability`
 - File: `RequestProject/Main.lean`
@@ -14,15 +14,56 @@ export, so that a reader can check by hand that the formalization is faithful.
 
 ## 1. Informal statement (paper, `thm:main`)
 
-> Let $0<\kappa\leq 1/2$. Let
-> $$ M = \left\lceil C\kappa^{-20}\log(2/\kappa)\right\rceil, \qquad \eps = c\,\kappa^7/M^2, $$
+> **Polynomial Hilbert-Schmidt stability of the lamplighter group.**
+>
+> For $A\in M_d(\mathbb{C})$ let
+>
+> $$\left\lVert A\right\rVert_{\mathrm{HS}}^2=\frac{1}{d}Tr(AA^*).$$
+> 
+> Let $0 < \kappa \leq 1/2$. Let
+>
+> $$
+> M = \left\lceil C\kappa^{-20}\log(2/\kappa)\right\rceil,
+> \qquad
+> \varepsilon = c \kappa^7/M^2,
+> $$
+>
 > for universal constants $C,c>0$.
+>
 > Then for every $d \in \mathbb{N}$ and $A,T \in U(d)$ unitaries such that
-> $$ \| A^2 - 1 \|_{\mathrm{HS}} \leq \eps \quad\text{ and }\quad \| [A, T^{-i}AT^{i}] \|_{\mathrm{HS}} \leq \eps \quad\text{ for all }\quad 0\leq i\leq 2M, $$
+>
+> $$
+> \left\lVert A^2 - 1 \right\rVert_{\mathrm{HS}} \leq \varepsilon
+> $$
+>
+> and
+>
+> $$
+> \left\lVert [A, T^{-i}AT^i] \right\rVert_{\mathrm{HS}} \leq \varepsilon
+> \qquad \text{for all } 0 \leq i \leq 2M,
+> $$
+>
 > there exist unitaries $\widetilde{A},\widetilde{T} \in U(d)$ such that
-> $\widetilde{A}^2=1$ and $\widetilde{T}^{-i}\widetilde{A}\widetilde{T}^{i}$
-> commutes with $\widetilde{A}$ for all $i \in \mathbb{Z}$, and further:
-> $$ \| A - \widetilde{A}\|_{\mathrm{HS}} \leq \kappa, \quad \| T - \widetilde{T}\|_{\mathrm{HS}} \leq \kappa. $$
+>
+> $$
+> \widetilde{A}^2 = 1
+> $$
+>
+> and
+>
+> $$
+> \widetilde{T}^{-i}\widetilde{A}\widetilde{T}^i
+> \text{ commutes with } \widetilde{A}
+> \qquad \text{for all } i \in \mathbb{Z},
+> $$
+>
+> and further
+>
+> $$
+> \left\lVert A - \widetilde{A} \right\rVert_{\mathrm{HS}} \leq \kappa,
+> \qquad
+> \left\lVert T - \widetilde{T} \right\rVert_{\mathrm{HS}} \leq \kappa.
+> $$
 
 ---
 
@@ -62,11 +103,11 @@ theorem lamplighter_HS_stability :
 | Universal constants $C, c > 0$ | `∃ C c : ℝ, 0 < C ∧ 0 < c ∧ …` | Existentially quantified up front; the rest of the statement holds for *these* constants, matching "for universal constants $C,c>0$". |
 | $0 < \kappa \le 1/2$ | `∀ (κ : ℝ), 0 < κ → κ ≤ 1 / 2` | Identical hypothesis on the tolerance. |
 | $M = \lceil C\kappa^{-20}\log(2/\kappa)\rceil$ | `M = ⌈C * κ ^ (-20 : ℤ) * Real.log (2 / κ)⌉₊` | `⌈·⌉₊` is the natural-number ceiling; `M : ℕ`. `κ ^ (-20 : ℤ)` is `κ^{-20}` (zpow). `Real.log` is the natural logarithm, matching $\log$. The argument is passed as a `∀ M` constrained to this exact value (equivalent to substituting the closed form). |
-| $\eps = c\,\kappa^7/M^2$ | `ε = c * κ ^ 7 / (M : ℝ) ^ 2` | `M` cast to `ℝ` before squaring; division in `ℝ`. Passed as a `∀ ε` constrained to this exact value. |
+| $\varepsilon = c\,\kappa^7/M^2$ | `ε = c * κ ^ 7 / (M : ℝ) ^ 2` | `M` cast to `ℝ` before squaring; division in `ℝ`. Passed as a `∀ ε` constrained to this exact value. |
 | $d \in \mathbb{N}$ | `∀ (d : ℕ)` | Dimension. |
 | $A, T \in U(d)$ unitaries | `A T : Matrix.unitaryGroup (Fin d) ℂ` | The unitary group of $d \times d$ complex matrices; the coercion `(A : Matrix (Fin d) (Fin d) ℂ)` recovers the underlying matrix. |
-| $\| A^2 - 1 \|_{\mathrm{HS}} \le \eps$ | `normHS ((A : Matrix …) ^ 2 - 1) ≤ ε` | `normHS` is the normalized HS norm (see §4). `1` is the identity matrix. |
-| $\| [A, T^{-i}AT^{i}] \|_{\mathrm{HS}} \le \eps$ for $0 \le i \le 2M$ | `∀ i : ℕ, i ≤ 2 * M → normHS (⁅A, (star T) ^ i * A * T ^ i⁆) ≤ ε` | `⁅·,·⁆` is the ring commutator $XY - YX$. Since `star T = T⁻¹` in the unitary group, `(star T) ^ i = T^{-i}`, so `(star T)^i * A * T^i = T^{-i} A T^{i}`. Index range $0 \le i \le 2M$ becomes `i : ℕ, i ≤ 2 * M`. |
+| $\| A^2 - 1 \|_{\mathrm{HS}} \le \varepsilon$ | `normHS ((A : Matrix …) ^ 2 - 1) ≤ ε` | `normHS` is the normalized HS norm (see §4). `1` is the identity matrix. |
+| $\| [A, T^{-i}AT^{i}] \|_{\mathrm{HS}} \le \varepsilon$ for $0 \le i \le 2M$ | `∀ i : ℕ, i ≤ 2 * M → normHS (⁅A, (star T) ^ i * A * T ^ i⁆) ≤ ε` | `⁅·,·⁆` is the ring commutator $XY - YX$. Since `star T = T⁻¹` in the unitary group, `(star T) ^ i = T^{-i}`, so `(star T)^i * A * T^i = T^{-i} A T^{i}`. Index range $0 \le i \le 2M$ becomes `i : ℕ, i ≤ 2 * M`. |
 | $\exists \widetilde A, \widetilde T \in U(d)$ | `∃ (A' T' : Matrix.unitaryGroup (Fin d) ℂ)` | $\widetilde A = $ `A'`, $\widetilde T = $ `T'`. |
 | $\widetilde A^2 = 1$ | `(A' : Matrix …) ^ 2 = 1` | Genuine order-two (involution). |
 | $\widetilde T^{-i}\widetilde A\widetilde T^{i}$ commutes with $\widetilde A$, $\forall i \in \mathbb{Z}$ | `∀ i : ℤ, Commute A' (T' ^ (-i) * A' * T' ^ i)` | `Commute x y` is `x * y = y * x`. Integer powers `T' ^ (-i)`, `T' ^ i` taken in the unitary group; quantified over all `i : ℤ`. |
@@ -79,7 +120,7 @@ theorem lamplighter_HS_stability :
 
 - **`normHS`** (`LamplighterStability.normHS`, from `RequestProject/Foundations.lean`):
   the *normalized* Hilbert–Schmidt norm
-  $\|X\|_{\mathrm{HS}} = \sqrt{\tfrac{1}{|\iota|}\sum_{i,j} |X_{ij}|^2}$.
+  $$\left\lVert X\right\rVert_{\mathrm{HS}}=\sqrt{\tfrac{1}{|\iota|}\sum_{i,j} |X_{ij}|^2}.$$
   For `ι = Fin d` this is $\sqrt{\tfrac{1}{d}\sum_{i,j}|X_{ij}|^2}$, matching the
   paper's normalized HS norm.
 - **`⁅·,·⁆`** : the ring (Lie) commutator `X * Y - Y * X`.
@@ -96,10 +137,10 @@ The Lean statement is a faithful transcription of the paper's Theorem 1.1:
 - **Constants.** The universal constants $C, c$ are existentially quantified at the
   outermost level, so the theorem asserts the existence of constants for which the
   bound holds — exactly the meaning of "for universal constants $C,c>0$".
-- **Closed-form window and tolerance.** $M$ and $\eps$ are bound to the precise
+- **Closed-form window and tolerance.** $M$ and $\varepsilon$ are bound to the precise
   closed forms from the paper (the `∀ M`/`∀ ε` with equality constraints is logically
   the same as substituting the closed forms directly).
-- **Hypotheses.** Both defect hypotheses ($\|A^2-1\|_{\mathrm{HS}} \le \eps$ and the
+- **Hypotheses.** Both defect hypotheses ($\|A^2-1\|_{\mathrm{HS}} \le \varepsilon$ and the
   approximate commutation along the orbit for $0 \le i \le 2M$) appear unchanged, with
   $T^{-i}AT^i$ rendered via `star`.
 - **Conclusion.** All four conclusions are present: $\widetilde A^2 = 1$, the genuine
